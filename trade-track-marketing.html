@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeTrack – Job Management Built for the Trades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ─────────────────────────────────────────────── */
+  :root {
+    --soil:    #2B1F0E;   /* deep brown – primary dark */
+    --slate:   #3D3529;   /* mid brown  – secondary */
+    --rust:    #C45A1A;   /* rust orange – primary accent */
+    --amber:   #E8A44A;   /* warm amber  – secondary accent */
+    --sand:    #F2E8D5;   /* light sand  – light bg */
+    --chalk:   #FAF6EF;   /* near-white  – page bg */
+    --steel:   #8C7B6B;   /* muted text  */
+    --white:   #FFFFFF;
+    --ink:     #1A1208;
+
+    --f-display: 'Barlow Condensed', sans-serif;
+    --f-body:    'Barlow', sans-serif;
+    --f-label:   'Barlow Semi Condensed', sans-serif;
+
+    --r: 4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--f-body);
+    background: var(--chalk);
+    color: var(--soil);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ─────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--soil);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    height: 64px;
+    border-bottom: 3px solid var(--rust);
+  }
+
+  .nav-logo {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--rust); }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sand);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--amber); }
+
+  .nav-cta {
+    background: var(--rust);
+    color: var(--white) !important;
+    padding: 0.45rem 1.2rem;
+    border-radius: var(--r);
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--amber) !important; color: var(--soil) !important; }
+
+  /* ── HERO ────────────────────────────────────────────────── */
+  .hero {
+    background: var(--soil);
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(255,255,255,0.03) 39px,
+        rgba(255,255,255,0.03) 40px
+      );
+    min-height: 90vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 3rem;
+    padding: 6rem 5vw 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Blueprint grid signature element */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(196,90,26,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(196,90,26,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rust);
+    border: 1px solid rgba(196,90,26,0.4);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--r);
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--rust);
+    border-radius: 50%;
+  }
+
+  .hero h1 {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--rust);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--sand);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--rust);
+    color: var(--white);
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    padding: 0.9rem 2rem;
+    border-radius: var(--r);
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--amber); color: var(--soil); transform: translateY(-1px); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: transparent;
+    color: var(--sand);
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    padding: 0.9rem 1.5rem;
+    border-radius: var(--r);
+    text-decoration: none;
+    border: 1px solid rgba(242,232,213,0.3);
+    transition: border-color 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* Hero mock screen */
+  .hero-visual {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  .mockup-frame {
+    background: var(--slate);
+    border: 2px solid rgba(196,90,26,0.35);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .mockup-bar {
+    background: var(--ink);
+    padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FEBC2E; }
+  .dot-g { background: #28C840; }
+  .mockup-url {
+    flex: 1; text-align: center;
+    font-size: 0.7rem;
+    color: var(--steel);
+    font-family: monospace;
+  }
+
+  .mockup-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .mock-header {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .mock-job {
+    background: rgba(0,0,0,0.3);
+    border-left: 3px solid var(--rust);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 0.6rem 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    align-items: start;
+  }
+  .mock-job-title {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--sand);
+  }
+  .mock-job-client {
+    font-size: 0.7rem;
+    color: var(--steel);
+  }
+  .mock-badge {
+    font-size: 0.65rem;
+    font-family: var(--f-label);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .badge-active { background: rgba(196,90,26,0.25); color: var(--amber); }
+  .badge-done   { background: rgba(40,200,64,0.15); color: #5CDB5C; }
+  .badge-sched  { background: rgba(255,255,255,0.08); color: var(--steel); }
+
+  .mock-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .mock-stat {
+    background: rgba(0,0,0,0.3);
+    border-radius: var(--r);
+    padding: 0.6rem;
+    text-align: center;
+  }
+  .mock-stat-val {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--amber);
+  }
+  .mock-stat-label {
+    font-size: 0.65rem;
+    color: var(--steel);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── TRUST BAR ──────────────────────────────────────────── */
+  .trust-bar {
+    background: var(--sand);
+    padding: 1.5rem 5vw;
+    display: flex; align-items: center; justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid rgba(43,31,14,0.1);
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--slate);
+    letter-spacing: 0.04em;
+  }
+  .trust-icon { font-size: 1.1rem; }
+
+  /* ── SECTIONS COMMON ─────────────────────────────────────── */
+  section { padding: 6rem 5vw; }
+
+  .section-eyebrow {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: var(--soil);
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1.05rem;
+    color: var(--steel);
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  /* ── PROBLEMS ────────────────────────────────────────────── */
+  .problems {
+    background: var(--soil);
+    color: var(--sand);
+  }
+  .problems .section-title { color: var(--white); }
+  .problems .section-sub   { color: rgba(242,232,213,0.65); }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .problem-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--r);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--rust);
+  }
+
+  .problem-icon {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .problem-card h3 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+  .problem-card p {
+    font-size: 0.9rem;
+    color: rgba(242,232,213,0.6);
+    line-height: 1.65;
+  }
+
+  /* ── FEATURES ────────────────────────────────────────────── */
+  .features { background: var(--chalk); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border: 1px solid rgba(43,31,14,0.1);
+    border-radius: var(--r);
+    padding: 2rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    border-color: var(--rust);
+    box-shadow: 0 4px 20px rgba(196,90,26,0.1);
+  }
+  .feature-card.featured {
+    grid-column: span 2;
+    background: var(--soil);
+    border-color: transparent;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .feature-icon {
+    width: 44px; height: 44px;
+    background: rgba(196,90,26,0.12);
+    border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .feature-card.featured .feature-icon {
+    background: rgba(196,90,26,0.2);
+  }
+
+  .feature-card h3 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: var(--soil);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+  .feature-card.featured h3 { color: var(--white); font-size: 1.5rem; }
+
+  .feature-card p { font-size: 0.9rem; color: var(--steel); line-height: 1.65; }
+  .feature-card.featured p { color: rgba(242,232,213,0.7); font-size: 1rem; }
+
+  .feature-list {
+    list-style: none;
+    margin-top: 1rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.88rem;
+    color: rgba(242,232,213,0.75);
+  }
+  .feature-list li::before {
+    content: '✓';
+    color: var(--amber);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  /* Feature visual */
+  .feature-visual-mock {
+    background: var(--slate);
+    border-radius: 8px;
+    padding: 1.25rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── ROLES ───────────────────────────────────────────────── */
+  .roles { background: var(--sand); }
+
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .role-card {
+    background: var(--white);
+    border-radius: var(--r);
+    padding: 2rem;
+    border-top: 4px solid var(--rust);
+    box-shadow: 0 2px 12px rgba(43,31,14,0.06);
+  }
+
+  .role-tag {
+    display: inline-block;
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: rgba(196,90,26,0.1);
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .role-card h3 {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    color: var(--soil);
+    margin-bottom: 0.75rem;
+  }
+  .role-card p { font-size: 0.88rem; color: var(--steel); line-height: 1.65; }
+
+  .role-list {
+    list-style: none;
+    margin-top: 1.25rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .role-list li {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+  .role-list li::before {
+    content: '→';
+    color: var(--rust);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── PRICING ─────────────────────────────────────────────── */
+  .pricing { background: var(--chalk); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+
+  .price-card {
+    background: var(--white);
+    border: 1px solid rgba(43,31,14,0.12);
+    border-radius: var(--r);
+    padding: 2rem;
+    position: relative;
+  }
+  .price-card.highlighted {
+    background: var(--soil);
+    border-color: var(--rust);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(43,31,14,0.25);
+  }
+  .price-popular {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--rust);
+    color: var(--white);
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .price-tier {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.5rem;
+  }
+  .price-card.highlighted .price-tier { color: var(--amber); }
+
+  .price-amount {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 3rem;
+    color: var(--soil);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .price-card.highlighted .price-amount { color: var(--white); }
+
+  .price-amount sup {
+    font-size: 1.4rem;
+    vertical-align: super;
+    font-weight: 700;
+  }
+  .price-period {
+    font-size: 0.85rem;
+    color: var(--steel);
+    margin-bottom: 1.5rem;
+  }
+  .price-card.highlighted .price-period { color: rgba(242,232,213,0.6); }
+
+  .price-desc {
+    font-size: 0.88rem;
+    color: var(--steel);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(43,31,14,0.08);
+  }
+  .price-card.highlighted .price-desc {
+    color: rgba(242,232,213,0.65);
+    border-color: rgba(255,255,255,0.08);
+  }
+
+  .price-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .price-features li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.87rem;
+    color: var(--slate);
+  }
+  .price-card.highlighted .price-features li { color: rgba(242,232,213,0.8); }
+  .price-features li::before {
+    content: '✓';
+    color: var(--amber);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── TESTIMONIAL ─────────────────────────────────────────── */
+  .testimonial {
+    background: var(--rust);
+    padding: 5rem 5vw;
+    text-align: center;
+  }
+
+  .quote {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
+    text-transform: uppercase;
+    color: var(--white);
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+  }
+  .quote-author {
+    font-family: var(--f-label);
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── VIDEO PLACEHOLDER ──────────────────────────────────── */
+  .video-section { background: var(--sand); }
+
+  .video-wrap {
+    margin-top: 3rem;
+    background: var(--slate);
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    max-width: 840px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    border: 2px dashed rgba(196,90,26,0.3);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .video-wrap:hover { border-color: var(--rust); }
+
+  .play-btn {
+    width: 72px; height: 72px;
+    background: var(--rust);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    color: var(--white);
+    box-shadow: 0 8px 24px rgba(196,90,26,0.4);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .video-wrap:hover .play-btn { transform: scale(1.08); background: var(--amber); color: var(--soil); }
+
+  .video-label {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--steel);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Screenshot gallery */
+  .screenshots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .screenshot-ph {
+    background: var(--slate);
+    border-radius: var(--r);
+    aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px dashed rgba(196,90,26,0.25);
+    font-size: 0.75rem;
+    font-family: var(--f-label);
+    color: var(--steel);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .screenshot-ph span { font-size: 1.5rem; }
+
+  /* ── CTA ─────────────────────────────────────────────────── */
+  .cta-section {
+    background: var(--soil);
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(255,255,255,0.03) 39px,
+        rgba(255,255,255,0.03) 40px
+      );
+    text-align: center;
+    padding: 7rem 5vw;
+  }
+  .cta-section .section-title { color: var(--white); }
+  .cta-section .section-sub   { color: rgba(242,232,213,0.65); margin: 1rem auto 2.5rem; text-align: center; }
+
+  .cta-form {
+    display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+    max-width: 520px; margin: 0 auto;
+  }
+  .cta-input {
+    flex: 1; min-width: 220px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--r);
+    color: var(--white);
+    font-family: var(--f-body);
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .cta-input::placeholder { color: rgba(255,255,255,0.35); }
+  .cta-input:focus { border-color: var(--rust); }
+
+  /* ── FOOTER ──────────────────────────────────────────────── */
+  footer {
+    background: var(--ink);
+    color: rgba(242,232,213,0.4);
+    padding: 2.5rem 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: var(--sand);
+    letter-spacing: 0.04em;
+  }
+  .footer-logo span { color: var(--rust); }
+  footer p { font-size: 0.82rem; }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-size: 0.82rem; color: rgba(242,232,213,0.4);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--sand); }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────── */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding: 4rem 5vw; }
+    .hero-visual { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feature-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+    .roles-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card.highlighted { transform: none; }
+    .screenshots { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Trade<span>Track</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#roles">Who It's For</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#demo" class="nav-cta">Book a Demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Job Management Software for UK Trades</div>
+    <h1>Stop Running Jobs<em>From Memory</em></h1>
+    <p class="hero-sub">TradeTrack puts your surveyors, managers, and workers on the same page — from first survey to final sign-off. No spreadsheets. No WhatsApp chaos. No missed jobs.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary">📅 Book a Free Demo</a>
+      <a href="#features" class="btn-ghost">See How It Works →</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="mockup-frame">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="mockup-url">trade-track.co.uk/dashboard</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mock-header">📋 Active Jobs — Week 24</div>
+
+        <div class="mock-job">
+          <div>
+            <div class="mock-job-title">Roof Replacement — Andover</div>
+            <div class="mock-job-client">Taylor Roofing Ltd · Dave H.</div>
+          </div>
+          <span class="mock-badge badge-active">In Progress</span>
+        </div>
+
+        <div class="mock-job">
+          <div>
+            <div class="mock-job-title">Bathroom Refit — Salisbury</div>
+            <div class="mock-job-client">Prestige Plumbing · Mike J.</div>
+          </div>
+          <span class="mock-badge badge-done">Complete</span>
+        </div>
+
+        <div class="mock-job">
+          <div>
+            <div class="mock-job-title">Rewire — Winchester</div>
+            <div class="mock-job-client">Swift Electrical · Sarah T.</div>
+          </div>
+          <span class="mock-badge badge-sched">Scheduled</span>
+        </div>
+
+        <div class="mock-stats">
+          <div class="mock-stat">
+            <div class="mock-stat-val">14</div>
+            <div class="mock-stat-label">Active</div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-val">6</div>
+            <div class="mock-stat-label">This Week</div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-val">98%</div>
+            <div class="mock-stat-label">On Time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-icon">🏗️</span> Built for UK Trades</div>
+  <div class="trust-item"><span class="trust-icon">📱</span> Works on Any Device</div>
+  <div class="trust-item"><span class="trust-icon">🔒</span> Secure & GDPR Ready</div>
+  <div class="trust-item"><span class="trust-icon">⚡</span> Live in Under a Day</div>
+  <div class="trust-item"><span class="trust-icon">🇬🇧</span> UK-Based Support</div>
+</div>
+
+<!-- PROBLEM SECTION -->
+<section class="problems">
+  <div class="section-eyebrow">Sound familiar?</div>
+  <h2 class="section-title">Running a Trade Business<br>Shouldn't Feel Like This</h2>
+  <p class="section-sub">Most small contractors manage jobs across WhatsApp, paper timesheets, and memory. It works — until it doesn't.</p>
+
+  <div class="problems-grid">
+    <div class="problem-card">
+      <span class="problem-icon">📞</span>
+      <h3>Constant phone calls</h3>
+      <p>Workers ringing to ask where they're needed next. Managers spending hours a day just keeping people in the loop.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">📋</span>
+      <h3>Paper timesheets lost</h3>
+      <p>Timesheets handed in late, illegible, or not at all. Payroll guesswork eats hours every week.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🗂️</span>
+      <h3>Jobs falling through gaps</h3>
+      <p>No single source of truth means jobs get double-booked, forgotten, or started without all the details.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">📊</span>
+      <h3>No visibility for management</h3>
+      <p>Can't see who's on what job, what's running behind, or where the bottlenecks are — until a client rings angry.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-eyebrow">What TradeTrack Does</div>
+  <h2 class="section-title">One App.<br>Your Whole Operation.</h2>
+  <p class="section-sub">From survey to completion, every job, every worker, every update — in one place.</p>
+
+  <div class="features-grid">
+    <div class="feature-card featured">
+      <div>
+        <div class="feature-icon">📋</div>
+        <h3>Full Job Lifecycle Management</h3>
+        <p>Create a job from a survey, assign workers, track progress through stages, and close it off with sign-off photos and client confirmation — all without touching a spreadsheet.</p>
+        <ul class="feature-list">
+          <li>Survey → Schedule → Assign → Complete workflow</li>
+          <li>Job notes and documents attached to each job</li>
+          <li>Real-time status updates visible to all roles</li>
+          <li>Photo uploads and completion sign-off</li>
+        </ul>
+      </div>
+      <div class="feature-visual-mock">
+        <div style="font-family: var(--f-label); font-size: 0.75rem; color: var(--amber); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;">Job #1042 — Roof Survey</div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.5rem 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.8rem; color: var(--sand);">📍 Survey Complete</span>
+            <span style="font-size: 0.7rem; color: #5CDB5C;">✓ Done</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(196,90,26,0.2); padding: 0.5rem 0.75rem; border-radius: 4px; border-left: 2px solid var(--rust);">
+            <span style="font-size: 0.8rem; color: var(--sand);">🔨 Works in Progress</span>
+            <span style="font-size: 0.7rem; color: var(--amber);">Active</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 0.5rem 0.75rem; border-radius: 4px;">
+            <span style="font-size: 0.8rem; color: var(--steel);">✅ Sign-Off</span>
+            <span style="font-size: 0.7rem; color: var(--steel);">Pending</span>
+          </div>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.72rem; color: var(--steel);">Assigned: Dave H. · Est. 2 days</div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">⏱️</div>
+      <h3>Digital Timesheets</h3>
+      <p>Workers clock on and off against specific jobs from their phone. No paper. Managers approve in one click and it's payroll-ready.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3>Scheduling & Dispatch</h3>
+      <p>Drag-and-drop job scheduler shows who's available, where they are, and what's coming up. No more double-booking or phone calls.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <h3>Multi-Role Access</h3>
+      <p>Surveyors, managers, and workers each see exactly what they need. Role-based access keeps things clean and confidential.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Live Dashboard</h3>
+      <p>See your whole operation at a glance — active jobs, overdue tasks, worker allocation, and this week's workload. No spreadsheet refresh required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="roles" id="roles">
+  <div class="section-eyebrow">Built for Every Role</div>
+  <h2 class="section-title">One App, Three Views</h2>
+  <p class="section-sub">Every person in your business gets the right information at the right time — nothing more, nothing less.</p>
+
+  <div class="roles-grid">
+    <div class="role-card">
+      <span class="role-tag">Surveyor</span>
+      <h3>Survey & Quote</h3>
+      <p>Log site visits, capture notes and photos, and create jobs directly from the survey — no re-keying data back at the office.</p>
+      <ul class="role-list">
+        <li>Mobile-first survey capture</li>
+        <li>Photo and note uploads on site</li>
+        <li>Job creation from survey data</li>
+        <li>Customer details attached automatically</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <span class="role-tag">Manager</span>
+      <h3>Plan & Control</h3>
+      <p>Full visibility across all jobs and workers. Assign work, track progress, spot problems before they become complaints.</p>
+      <ul class="role-list">
+        <li>Whole-business job dashboard</li>
+        <li>Worker scheduling & assignment</li>
+        <li>Timesheet approval in one tap</li>
+        <li>Overdue job alerts</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <span class="role-tag">Worker</span>
+      <h3>Know Your Day</h3>
+      <p>Workers see exactly where they need to be and what needs doing. Clock on, do the job, upload completion photo, clock off. Simple.</p>
+      <ul class="role-list">
+        <li>Daily job list on mobile</li>
+        <li>Clock on/off per job</li>
+        <li>Job instructions & docs</li>
+        <li>Completion photo sign-off</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO / SCREENSHOTS -->
+<section class="video-section" id="demo">
+  <div class="section-eyebrow">See It in Action</div>
+  <h2 class="section-title">Watch How It Works</h2>
+  <p class="section-sub">A 3-minute walkthrough covering job creation, worker assignment, and sign-off — the full cycle in one go.</p>
+
+  <div class="video-wrap">
+    <div class="play-btn">▶</div>
+    <div class="video-label">TradeTrack Product Walkthrough — 3 min</div>
+  </div>
+
+  <div style="margin-top: 3rem;">
+    <div class="section-eyebrow">App Screenshots</div>
+    <div class="screenshots">
+      <div class="screenshot-ph"><span>📋</span>Job Dashboard</div>
+      <div class="screenshot-ph"><span>📅</span>Scheduling View</div>
+      <div class="screenshot-ph"><span>📱</span>Worker Mobile View</div>
+      <div class="screenshot-ph"><span>⏱️</span>Timesheet Approval</div>
+      <div class="screenshot-ph"><span>📊</span>Management Reports</div>
+      <div class="screenshot-ph"><span>🔍</span>Survey Capture</div>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--steel); font-style: italic;">↑ Replace placeholders with real screenshots before launch</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-eyebrow">Simple Pricing</div>
+  <h2 class="section-title">Grow Into It</h2>
+  <p class="section-sub">Start with what you need. Upgrade as your team grows. No hidden fees, no setup costs.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">Starter</div>
+      <div class="price-amount"><sup>£</sup>29</div>
+      <div class="price-period">per month · up to 5 users</div>
+      <div class="price-desc">For sole traders and very small crews getting started with digital job management.</div>
+      <ul class="price-features">
+        <li>Up to 5 users</li>
+        <li>Job creation & tracking</li>
+        <li>Digital timesheets</li>
+        <li>Mobile access</li>
+        <li>Email support</li>
+      </ul>
+      <a href="mailto:hello@trade-track.co.uk?subject=Starter Plan Demo Request" class="btn-primary" style="width: 100%; justify-content: center;">Book a Demo</a>
+    </div>
+
+    <div class="price-card highlighted">
+      <div class="price-popular">Most Popular</div>
+      <div class="price-tier">Professional</div>
+      <div class="price-amount"><sup>£</sup>79</div>
+      <div class="price-period">per month · up to 20 users</div>
+      <div class="price-desc">For growing contractors with surveyors, managers, and workers needing full coordination.</div>
+      <ul class="price-features">
+        <li>Up to 20 users</li>
+        <li>All Starter features</li>
+        <li>Surveyor workflow & photo capture</li>
+        <li>Scheduling & dispatch</li>
+        <li>Manager dashboard & reports</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="mailto:hello@trade-track.co.uk?subject=Professional Plan Demo Request" class="btn-primary" style="width: 100%; justify-content: center;">Book a Demo</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tier">Business</div>
+      <div class="price-amount"><sup>£</sup>149</div>
+      <div class="price-period">per month · unlimited users</div>
+      <div class="price-desc">For established contractors running multiple teams and needing full operational control.</div>
+      <ul class="price-features">
+        <li>Unlimited users</li>
+        <li>All Professional features</li>
+        <li>Custom workflows</li>
+        <li>API access</li>
+        <li>Dedicated onboarding</li>
+        <li>Phone support</li>
+      </ul>
+      <a href="mailto:hello@trade-track.co.uk?subject=Business Plan Demo Request" class="btn-primary" style="width: 100%; justify-content: center;">Book a Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testimonial">
+  <div class="quote">"We went from three whiteboards and a spreadsheet to one app. The lads actually use it because it's dead simple."</div>
+  <div class="quote-author">— Beta tester, Roofing Contractor · Hampshire</div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-eyebrow" style="color: var(--amber);">Get Started</div>
+  <h2 class="section-title">Book Your Free Demo</h2>
+  <p class="section-sub">We'll walk you through TradeTrack in 20 minutes and show you how it would work for your team. No obligation.</p>
+  <div class="cta-form">
+    <input type="email" class="cta-input" placeholder="your@email.com">
+    <a href="mailto:hello@trade-track.co.uk?subject=Demo Request" class="btn-primary">📅 Book a Demo</a>
+  </div>
+  <p style="margin-top: 1rem; font-size: 0.82rem; color: rgba(242,232,213,0.35);">Or email us directly: hello@trade-track.co.uk</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Trade<span>Track</span></div>
+  <p>© 2025 TradeTrack · trade-track.co.uk · Built in Hampshire, UK</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="mailto:hello@trade-track.co.uk">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
